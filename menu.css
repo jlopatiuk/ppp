@@ -1,0 +1,260 @@
+/* Layout geral */
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    background: #f4f6f8;
+    color: #1f2937;
+}
+
+.topbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 20px;
+    height: 60px;
+    background: #1d4ed8;
+    color: #fff;
+    box-shadow: 0 1px 6px rgba(0,0,0,.15);
+}
+
+.topbar-center {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+}
+
+.logo-top {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6px 10px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.15);
+}
+
+.logo-img {
+    height: 36px;
+    width: auto;
+    object-fit: contain;
+}
+.profile-menu {
+    position: relative;
+    display: flex;
+    align-items: center;
+    padding: 6px;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.avatar-wrapper {
+    position: relative;
+    display: inline-flex;
+}
+
+.profile-icon {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    background: #fff;
+    border: 2px solid rgba(255,255,255,0.6);
+}
+
+.status-dot {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    border: 2px solid #1d4ed8;
+    background: #10b981;
+}
+
+.profile-dropdown {
+    position: absolute;
+    right: 0;
+    top: 52px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding: 12px;
+    width: 150px;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 10px;
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.18);
+    opacity: 0;
+    visibility: hidden;
+    transform: translateY(-8px);
+    transition: opacity 150ms ease, transform 150ms ease, visibility 150ms;
+    z-index: 10;
+}
+
+.profile-menu:hover .profile-dropdown,
+.profile-menu.open .profile-dropdown {
+    opacity: 1;
+    visibility: visible;
+    transform: translateY(0);
+}
+
+.profile-menu {
+    padding: 8px;
+}
+
+.btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    background: rgba(255,255,255,.2);
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.btn-secondary {
+    background: rgba(255,255,255,.1);
+}
+
+.profile-dropdown .btn {
+    background: #1d4ed8;
+    color: #fff;
+}
+
+.profile-dropdown .btn-secondary {
+    background: #f3f4f6;
+    color: #1f2937;
+}
+
+.profile-desc {
+    padding: 10px 12px;
+    font-size: 0.9rem;
+    color: #1f2937;
+    background: rgba(148, 163, 184, 0.1);
+    border-radius: 8px;
+    margin-bottom: 10px;
+    min-height: 40px;
+}
+
+.layout {
+    display: flex;
+    height: calc(100vh - 60px);
+}
+
+.sidebar {
+    width: 250px;
+    padding: 20px;
+    border-right: 1px solid rgba(15, 23, 42, 0.1);
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.logo {
+    font-weight: 700;
+    font-size: 1.25rem;
+    padding: 10px;
+    background: rgba(29, 78, 216, 0.1);
+    border-radius: 8px;
+}
+
+.module {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.module-title {
+    font-weight: 600;
+    color: #334155;
+}
+
+.module-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.module-list a {
+    display: block;
+    padding: 10px 12px;
+    border-radius: 8px;
+    background: rgba(29, 78, 216, 0.06);
+    color: #1f2937;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.module-list a:hover,
+.module-list a.active {
+    background: rgba(29, 78, 216, 0.15);
+}
+
+.btn-block {
+    width: 100%;
+}
+
+.main {
+    flex: 1;
+    padding: 28px;
+    overflow-y: auto;
+}
+
+.activities h1 {
+    margin: 0 0 18px;
+    font-size: 1.7rem;
+    color: #0f172a;
+}
+
+.cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 18px;
+}
+
+.card {
+    padding: 20px;
+    border-radius: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(15, 23, 42, 0.08);
+    min-height: 140px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-weight: 600;
+    color: #0f172a;
+    gap: 12px;
+}
+
+.card-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.card-description {
+    font-size: 0.95rem;
+    color: #475569;
+    margin-bottom: 12px;
+}
+
+.card-status {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: #475569;
+    margin-bottom: 14px;
+}
+
+.card-btn {
+    padding: 10px 14px;
+    border: none;
+    border-radius: 8px;
+    background: #1d4ed8;
+    color: #fff;
+    cursor: pointer;
+    font-weight: 600;
+}
+
+.card-btn:hover {
+    background: #2563eb;
+}

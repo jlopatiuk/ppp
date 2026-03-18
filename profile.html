@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Perfil</title>
+    <link rel="stylesheet" href="menu.css">
+    <style>
+        .profile-page {
+            max-width: 480px;
+            margin: 40px auto;
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+        }
+
+        .profile-page h1 {
+            margin-top: 0;
+        }
+
+        .profile-field {
+            margin-bottom: 12px;
+        }
+
+        .profile-field label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .profile-field span {
+            display: block;
+            padding: 10px 12px;
+            background: #f4f6f8;
+            border-radius: 8px;
+        }
+
+        .profile-photo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 18px;
+        }
+
+        .profile-photo img {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 2px solid rgba(29, 78, 216, 0.3);
+        }
+
+        .avatar-wrapper {
+            position: relative;
+            display: inline-flex;
+        }
+
+        .status-dot {
+            position: absolute;
+            right: 2px;
+            bottom: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: #10b981;
+            border: 2px solid white;
+            box-shadow: 0 0 0 1px rgba(0,0,0,0.1);
+            opacity: 0;
+            transition: opacity 150ms ease;
+        }
+
+        .status-dot.online {
+            opacity: 1;
+        }
+
+        .upload-label {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 8px 12px;
+            border-radius: 8px;
+            background: #1d4ed8;
+            color: #fff;
+            cursor: pointer;
+            font-weight: 600;
+        }
+
+        .upload-label input {
+            display: none;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 18px;
+            color: #1d4ed8;
+            text-decoration: none;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div class="profile-page">
+        <h1>Perfil</h1>
+
+        <div class="profile-photo">
+            <div class="avatar-wrapper">
+                <img id="profileAvatar" src="sem-foto.jpg" alt="Avatar" />
+                <span class="status-dot" id="statusDot"></span>
+            </div>
+            <label class="upload-label">
+                Trocar foto
+                <input id="photoInput" type="file" accept="image/*" />
+            </label>
+        </div>
+
+        <div class="profile-field">
+            <label>Email</label>
+            <span id="profileEmail">Carregando...</span>
+        </div>
+        <div class="profile-field">
+            <label>Nome</label>
+            <span id="profileName">Carregando...</span>
+        </div>
+        <div class="profile-field">
+            <label>Descrição</label>
+            <textarea id="profileDescription" rows="3" style="width:100%; padding:10px; border-radius:8px; border:1px solid #d1d5db;"></textarea>
+        </div>
+        <div class="profile-field">
+            <label>Criado em</label>
+            <span id="profileCreated">Carregando...</span>
+        </div>
+        <div class="profile-field">
+            <label>Último login</label>
+            <span id="profileLastLogin">Carregando...</span>
+        </div>
+        <button id="saveProfile" class="btn" style="margin-top:12px;">Salvar</button>
+        <a class="back-link" href="menu.html">Voltar ao painel</a>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        const currentUser = localStorage.getItem('currentUser');
+
+        async function initProfile() {
+            const user = await getUserByEmail(currentUser);
+            if (!user) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            document.getElementById('profileEmail').textContent = user.email;
+            document.getElementById('profileName').textContent = user.name || '–';
+            document.getElementById('profileCreated').textContent = user.createdAt ? new Date(user.createdAt).toLocaleString() : '–';
+            document.getElementById('profileLastLogin').textContent = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : '–';
+
+            const profileAvatar = document.getElementById('profileAvatar');
+            const photoInput = document.getElementById('photoInput');
+            const profileDescription = document.getElementById('profileDescription');
+            const saveButton = document.getElementById('saveProfile');
+
+            if (user.profileImage) {
+                profileAvatar.src = user.profileImage;
+            }
+
+            if (user.description) {
+                profileDescription.value = user.description;
+            }
+
+            photoInput.addEventListener('change', () => {
+                const file = photoInput.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = async () => {
+                    const base64 = reader.result;
+                    profileAvatar.src = base64;
+                    await updateUser({ ...user, profileImage: base64 });
+                };
+                reader.readAsDataURL(file);
+            });
+
+            saveButton.addEventListener('click', async () => {
+                const description = profileDescription.value.trim();
+                await updateUser({ ...user, description });
+                alert('Perfil atualizado!');
+            });
+
+        }
+
+        initProfile();
+    </script>
+</body>
+</html>
