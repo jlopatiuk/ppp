@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contas Existentes</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <h1>Contas Existentes</h1>
+    <p id="accountCount">Carregando...</p>
+    <table border="1" style="width: 100%; text-align: left;">
+        <thead>
+            <tr>
+                <th>Email</th>
+                <th>Senha</th>
+                <th>Data de Criacao</th>
+                <th>Ultimo Login</th>
+            </tr>
+        </thead>
+        <tbody id="accountsTable">
+        </tbody>
+    </table>
+    <script src="db.js"></script>
+    <script>
+        async function loadAccounts() {
+            const table = document.getElementById('accountsTable');
+            const accountCount = document.getElementById('accountCount');
+
+            try {
+                const users = await getAllUsers();
+                accountCount.textContent = `Total de contas: ${users.length}`;
+
+                if (users.length === 0) {
+                    const row = table.insertRow();
+                    const cell = row.insertCell(0);
+                    cell.colSpan = 4;
+                    cell.textContent = 'Nenhuma conta encontrada.';
+                    return;
+                }
+
+                users.forEach((user) => {
+                    const row = table.insertRow();
+                    row.insertCell(0).textContent = user.email;
+                    row.insertCell(1).textContent = user.password;
+                    row.insertCell(2).textContent = user.createdAt ? new Date(user.createdAt).toLocaleString() : 'N/A';
+                    row.insertCell(3).textContent = user.lastLogin ? new Date(user.lastLogin).toLocaleString() : 'Nunca';
+                });
+            } catch (err) {
+                accountCount.textContent = 'Erro ao carregar contas.';
+                const row = table.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 4;
+                cell.textContent = 'Nao foi possivel carregar os dados salvos no navegador.';
+            }
+        }
+
+        loadAccounts();
+    </script>
+</body>
+</html>

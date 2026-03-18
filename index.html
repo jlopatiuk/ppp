@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>entrar</title>
+    <link rel="stylesheet" href="styles2.css">
+</head>
+<body>
+    <img src="ilustracoes-de-robos-cyborg_24640-134419.avif" alt="Profile">
+    <h1>ENTRAR</h1>
+    <form>
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required><br><br>
+    
+
+        <button type="submit">entrar</button>
+        <button type="button" onclick="window.location.href='index1.html'">criar conta</button>
+    </form>
+    <script src="db.js"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const user = await getUserByEmail(email);
+            if (user && user.password === password) {
+                user.lastLogin = new Date().toISOString();
+                await updateUser(user);
+                localStorage.setItem('currentUser', email);
+                window.location.href = 'menu.html';
+            } else {
+                alert('Email ou senha incorretos!');
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel</title>
+    <link rel="stylesheet" href="menu.css">
+</head>
+<body>
+    <header class="topbar">
+        <div class="topbar-center">
+            <div class="logo-top">
+                <img class="logo-img" src="ilustracoes-de-robos-cyborg_24640-134419.avif" alt="Logo">
+            </div>
+        </div>
+        <div class="topbar-right">
+            <div class="profile-menu">
+                <div class="avatar-wrapper">
+                    <img class="profile-icon" src="sem-foto.jpg" alt="Perfil">
+                    <span class="status-dot online"></span>
+                </div>
+                <div class="profile-dropdown">
+                    <div id="profileDesc" class="profile-desc">Carregando descrição...</div>
+                    <button id="profileBtn" class="btn">Perfil</button>
+                    <button id="logoutBtn" class="btn btn-secondary">Sair</button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="module">
+                <div class="module-title">Módulo:</div>
+                <nav class="module-list" id="moduleList">
+                    <a href="#" data-module="introducao">Introdução</a>
+                    <a href="#" data-module="logica">Lógica</a>
+                    <a href="#" data-module="variaveis">Variáveis</a>
+                    <a href="#" data-module="operadores">Operadores</a>
+                    <a href="#" data-module="condicoes">Condições</a>
+                    <a href="#" data-module="repeticao">Repetição</a>
+                    <a href="#" data-module="vetores">Vetores</a>
+                    <a href="#" data-module="funcoes">Funções</a>
+                    <a href="#" data-module="poo">POO</a>
+                </nav>
+                <button class="btn btn-secondary btn-block">Ver outros</button>
+            </div>
+        </aside>
+
+        <main class="main">
+            <section class="activities">
+                <h1>Atividades</h1>
+                <div class="cards" id="cards"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="db.js"></script>
+    <script>
+        const currentUser = localStorage.getItem('currentUser');
+
+        async function initMenu() {
+            const loggedUser = await getUserByEmail(currentUser);
+            if (!loggedUser) {
+                window.location.href = 'index.html';
+                return;
+            }
+
+            const profileIcon = document.querySelector('.profile-icon');
+            const profileDesc = document.getElementById('profileDesc');
+
+            if (loggedUser.profileImage) {
+                profileIcon.src = loggedUser.profileImage;
+            }
+
+            if (loggedUser.description) {
+                profileDesc.textContent = loggedUser.description;
+            } else {
+                profileDesc.textContent = 'Sem descrição.';
+            }
+        }
+
+        initMenu();
+
+        const profileMenu = document.querySelector('.profile-menu');
+        const logoutBtn = document.getElementById('logoutBtn');
+
+        profileMenu.addEventListener('click', (event) => {
+            profileMenu.classList.toggle('open');
+            event.stopPropagation();
+        });
+
+        const profileBtn = document.getElementById('profileBtn');
+
+        profileBtn.addEventListener('click', () => {
+            window.location.href = 'profile.html';
+        });
+
+        logoutBtn.addEventListener('click', () => {
+            localStorage.removeItem('currentUser');
+            window.location.href = 'index.html';
+        });
+
+        document.addEventListener('click', () => {
+            profileMenu.classList.remove('open');
+        });
+
+        // For keyboard users
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape') {
+                profileMenu.classList.remove('open');
+            }
+        });
+
+        const modules = {
+            introducao: {
+                title: 'Introdução',
+                description: 'Conheça o ambiente de estudo, conceitos básicos e o plano do curso.',
+            },
+            logica: {
+                title: 'Lógica',
+                description: 'Aprenda a pensar em passos ordenados e usar estruturas lógicas.',
+            },
+            variaveis: {
+                title: 'Variáveis',
+                description: 'Entenda como armazenar e manipular dados com variáveis.',
+            },
+            operadores: {
+                title: 'Operadores',
+                description: 'Use operadores matemáticos e lógicos para criar expressões.',
+            },
+            condicoes: {
+                title: 'Condições',
+                description: 'Controle o fluxo com if, else e switch.',
+            },
+            repeticao: {
+                title: 'Repetição',
+                description: 'Automatize tarefas com loops como for e while.',
+            },
+            vetores: {
+                title: 'Vetores',
+                description: 'Colete valores relacionados em estruturas de dados.',
+            },
+            funcoes: {
+                title: 'Funções',
+                description: 'Separe o código em blocos reutilizáveis.',
+            },
+            poo: {
+                title: 'POO',
+                description: 'Entenda classes, objetos e encapsulamento.',
+            }
+        };
+
+        const cardsContainer = document.getElementById('cards');
+        const moduleLinks = document.querySelectorAll('#moduleList a');
+
+        function renderModule(moduleKey) {
+            cardsContainer.innerHTML = '';
+            const module = modules[moduleKey];
+
+            const card = document.createElement('div');
+            card.className = 'card';
+
+            const title = document.createElement('div');
+            title.textContent = module.title;
+            title.className = 'card-title';
+
+            const description = document.createElement('div');
+            description.textContent = module.description;
+            description.className = 'card-description';
+
+            const button = document.createElement('button');
+            button.className = 'card-btn';
+            button.textContent = 'Iniciar tarefa';
+            button.addEventListener('click', () => {
+                alert(`Iniciando tarefa: ${module.title}`);
+            });
+
+            card.appendChild(title);
+            card.appendChild(description);
+            card.appendChild(button);
+            cardsContainer.appendChild(card);
+
+            moduleLinks.forEach(link => {
+                link.classList.toggle('active', link.dataset.module === moduleKey);
+            });
+        }
+
+        moduleLinks.forEach(link => {
+            link.addEventListener('click', (event) => {
+                event.preventDefault();
+                const moduleKey = link.dataset.module;
+                renderModule(moduleKey);
+            });
+        });
+
+        // Start with first module
+        renderModule('introducao');
+    </script>
+</body>
+</html>
