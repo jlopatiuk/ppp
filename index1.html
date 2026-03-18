@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>cria conta</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <img src="ilustracoes-de-robos-cyborg_24640-134419.avif" alt="Profile">
+    <h1>REGISTRESE</h1>
+    <form>
+        <label for="name">Nome:</label>
+        <input type="text" id="name" name="name" required><br><br>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required><br><br>
+
+        <label for="password">Senha:</label>
+        <input type="password" id="password" name="password" required><br><br>
+        <br><br>
+        <button type="submit">criar conta</button>
+    </form>
+    <script src="db.js"></script>
+    <script>
+        document.querySelector('form').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+
+            const existingUser = await getUserByEmail(email);
+            if (existingUser) {
+                alert('Email já cadastrado!');
+                return;
+            }
+
+            await addUser({
+                name,
+                email,
+                password,
+                createdAt: new Date().toISOString(),
+                lastLogin: null,
+                profileImage: null,
+                description: ''
+            });
+
+            alert('Conta criada com sucesso!');
+            window.location.href = 'index.html';
+        });
+    </script>
+      
+</body>
+</html>

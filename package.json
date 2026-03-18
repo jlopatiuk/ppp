@@ -1,0 +1,9 @@
+{
+  "name": "ppp-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aplicacao HTML local com persistencia no IndexedDB do navegador.",
+  "scripts": {
+    "start": "powershell -NoProfile -Command \"Write-Host 'Abra o arquivo index.html no navegador para usar o app.'\""
+  }
+}
